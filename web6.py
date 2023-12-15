@@ -1,9 +1,10 @@
 import numpy as np
-arr = np.array([['CDN', 'HR-WEB', 'HR-API'], ['','','']], dtype=object)
+from colorama import Fore, Back, Style
+arr = np.array([['CDN', 'HR-WEB', 'HR-API', "BI-WEB", "BI-API", "ERP-WEB", "ERP-API", "CRM-WEB", "CRM-API", "EOFFICE-WEB", "EOFFICE-API"], ['','','','','','','','','','','']], dtype=object)
 
 def Sl_Product():
     sl = ""
-    sl = input("Vui lòng nhập số lượng muốn cài(Mặc định là 1 nếu không nhập): ")
+    sl = input(Fore.GREEN + "Vui lòng nhập số lượng muốn cài(Mặc định là 1 nếu không nhập): " + Style.RESET_ALL)
     if sl == "":
         sl = 1
     return sl
@@ -13,7 +14,7 @@ def choices():
         for a in arr[0]:
             number += 1
             print (str(number) + ". " + a, end="   ")
-        choices = input('Vui lòng nhập số (Nhập 0 để kết thúc): ')
+        choices = input(Fore.GREEN + '\nVui lòng nhập sản phẩm cần cài (Nhập 0 để kết thúc): ' + Style.RESET_ALL)
         match choices:
             case "0":
                 break
@@ -35,8 +36,6 @@ def choices():
 choices()
 for i in arr[0]:
     rows, cols = np.where(arr == i)
-    if arr[1][cols] == "":
-        continue
-    else:
+    if arr[1][cols] != "":
         print("Bạn đã chọn sản phẩm "+i+" với số lượng "+str(arr[1][cols]))
 
