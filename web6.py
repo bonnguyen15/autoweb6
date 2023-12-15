@@ -10,6 +10,11 @@ arr = np.array([['CDN', 'HR-WEB', 'HR-API', "BI-WEB", "BI-API", "ERP-WEB", "ERP-
 class choicePro:
     def __init__(self):
         pass
+    def showChoice(self):
+        for sp in arr[0]:
+            rows, cols = np.where(arr == sp)
+            if arr[1][cols] != "":
+                print("Ban da chon san pham "+sp+" voi so lan cai:",arr[1][cols[0]])
     def Sl_Product(self, sp):
         while True:
             sl = ""
@@ -40,13 +45,27 @@ class choicePro:
                 case "10": print("Ban da chon EOFFICE-WEB"); num = int(self.Sl_Product(arr[0][9])); arr[1][9] = num
                 case "11": print("Ban da chon EOFFICE-API"); num = int(self.Sl_Product(arr[0][10])); arr[1][10] = num
                 case _: print("Ban chua chon san pham. Vui long nhap lai")
+        self.showChoice()
 
 c = choicePro()
 c.choices()
-for i in arr[0]:
-    rows, cols = np.where(arr == i)
-    if arr[1][cols] != "":
-        print("Ban da chon san pham "+i+" voi so lan cai:",arr[1][cols[0]])
 
+def writeifo(sp, cols):
+    index = arr[1][cols[0]]
+    info=(f"Nhap duong dan chua source cho {sp} (Khong tu tao folder con trong duong dan)", "Nhap duong dan folder chua file index.html(Khong tu tao folder con trong duong dan)", "Nhap duong dan folder uploads", "Nhap ten cho API(vd:"")", "Nhap port cho API(vd:6020)", "Nhap branch name cua san pham", "Nhap link web(vd:https://dgn.com.vn)", "Nhap link api(vd:https://dgn.com.vn/api)", "Nhap ten db mongo cho API", "Nhap companycode", "Nhap duong dan folder cdn cua sp nay(vd:/home/cdn-api)", "Nhap link API-CDN(vd:https://cdgn.com.vn/cdn)", "Nhap secret API-CDN(vd:co 37 ky tu)")
+    print(f"Vui long nhap thong tin cho san pham {sp}")
+    for i in info:
+        nhap = input(f"{i}: ")
+        with open (sp + "." + str(index),"a") as f:
+            f.write(f"{i}:{nhap}\n")
+
+for sp in arr[0]:
+    rows, cols = np.where(arr == sp)
+    if arr[1][cols] != "":
+        writeifo(sp, cols)
+
+
+
+        
 
     

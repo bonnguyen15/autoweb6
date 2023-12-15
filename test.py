@@ -1,5 +1,7 @@
-import numpy as np
-t = np.array([[1,2,3,'foo'], [2,3,4,'bar']])
-
-rows, cols = np.where(t == 'bar')
-print("Vị trí của 'CDN' là:", rows[0], cols[0])
+a = 1
+b = 6
+c = 7
+if a == 5 or (b == 6 and c == 7):
+    print('True')
+else:
+    print('False')
