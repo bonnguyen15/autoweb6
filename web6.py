@@ -60,11 +60,11 @@ class Info():
         print(f"Vui long nhap thong tin cho san pham {sp}")
         for i in self.info[0]:
             x, y = np.where(self.info == i)
-            print(y)
             if not (sp == 'CDN' and (y[0] == 1 or y[0] == 5 or y[0] == 9 or y[0] == 10 or y[0] == 11 or y[0] == 12)):
                 nhap = input(f"{i}: ")
                 self.info[1][y[0]] = nhap
         for i in self.info[0]:
+            x, y = np.where(self.info == i)
             if self.info[1][y[0]] != "":
                 with open (filename,"a") as f:
                     f.write(f"{i}:{self.info[1][y[0]]}\n")
@@ -72,14 +72,17 @@ class Info():
 
     def editInfo(self, sp, filename):
         number = 0
-        with open (filename,'r+') as f:
+        with open (filename,'w+') as f:
             lines = f.readlines()
             print("------------------------------------------------------------------------------")
             print(f"Thong tin ban da nhap cho san pham {sp}: ")
             for line in lines:
                 number += 1
                 print(str(number) + line)
-            num_edit = input("Vui lòng chọn số cần chỉnh sửa: ")
+            # num_edit = input("Vui lòng chọn số cần chỉnh sửa: ")
+
+
+
             
 
 c = ChoicePro()
