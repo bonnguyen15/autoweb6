@@ -54,7 +54,7 @@ def writeifo(sp, cols):
     index = arr[1][cols[0]]
     info=np.array([[f"Nhap duong dan chua source cho {sp} (Khong tu tao folder con trong duong dan)", "Nhap duong dan folder chua file index.html(Khong tu tao folder con trong duong dan)", "Nhap duong dan folder uploads", "Nhap ten cho API(vd:"")", "Nhap port cho API(vd:6020)", "Nhap branch name cua san pham", "Nhap link web(vd:https://dgn.com.vn)", "Nhap link api(vd:https://dgn.com.vn/api)", "Nhap ten db mongo cho API", "Nhap companycode", "Nhap duong dan folder cdn cua sp nay(vd:/home/cdn-api)", "Nhap link API-CDN(vd:https://cdgn.com.vn/cdn)", "Nhap secret API-CDN(vd:co 37 ky tu)"],['','','','','','','','','','','','','',]], dtype=object)
     print(f"Vui long nhap thong tin cho san pham {sp}")
-    for i in range(len(info[0])):
+    for i in info[0]:
         nhap = input(f"{i}: ")
         x, y = np.where(info == i)
         info[1][y[0]] = nhap
