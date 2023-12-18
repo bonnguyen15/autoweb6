@@ -1,4 +1,4 @@
-import numpy as np
-arr = [[1 ,2 ,3 , 4], []]
-x, y = np.where(arr == 1)
-print(y)
+import string, random
+letters_and_digits = string.ascii_letters + string.digits
+random_string_and_digits=''.join(random.choice(letters_and_digits) for i in range(32))
+print("Random String and Digits: ", random_string_and_digits)

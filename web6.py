@@ -1,11 +1,13 @@
-import os
+import os, string, random
 try:
     import numpy as np
 except:
     os.system(f"pip install numpy")
 import numpy as np
 from colorama import Fore, Back, Style
-arr = np.array([['CDN', 'HR-WEB', 'HR-API', "BI-WEB", "BI-API", "ERP-WEB", "ERP-API", "CRM-WEB", "CRM-API", "EOFFICE-WEB", "EOFFICE-API"], ['','','','','','','','','','','']], dtype=object)
+arr = np.array([['CDN', 'HR-WEB', 'HR-API', "BI-WEB", "BI-API", "ERP-WEB", "ERP-API", "CRM-WEB", "CRM-API", "EOFFICE-WEB", "EOFFICE-API"], 
+                ['','','','','','','','','','','']
+                ], dtype=object)
 
 class choicePro:
     def __init__(self):
@@ -46,28 +48,36 @@ class choicePro:
                 case "11": print("Ban da chon EOFFICE-API"); num = int(self.Sl_Product(arr[0][10])); arr[1][10] = num
                 case _: print("Ban chua chon san pham. Vui long nhap lai")
         self.showChoice()
+class Info():
+    def __init__(self):
+        pass
+    def randomsecret(self):
+        letters_and_digits = string.ascii_letters + string.digits
+        random_string_and_digits=''.join(random.choice(letters_and_digits) for i in range(32))
+        return random_string_and_digits
+    def writeinfo(self, sp, cols):
+        index = arr[1][cols[0]]
+        info=np.array([[f"Nhap duong dan chua source cho {sp} (Khong tu tao folder con trong duong dan)", "Nhap duong dan folder chua file index.html(Khong tu tao folder con trong duong dan)", "Nhap duong dan folder uploads", "Nhap ten cho API(vd:"")", "Nhap port cho API(vd:6020)", "Nhap branch name cua san pham", "Nhap link web(vd:https://dgn.com.vn)", "Nhap link api(vd:https://dgn.com.vn/api)", "Nhap ten db mongo cho API", "Nhap companycode", "Nhap duong dan folder cdn cua sp nay(vd:/home/cdn-api)", "Nhap link API-CDN(vd:https://cdgn.com.vn/cdn)", "Nhap secret API-CDN(vd:co 37 ky tu)"],['','','','','','','','','','','','','',]], dtype=object)
+        print(f"Vui long nhap thong tin cho san pham {sp}")
+        for i in info[0]:
+            x, y = np.where(info == i)
+            print(y[0])
+            if not (sp == 'CDN' and (y[0] == 1 or y[0] == 5 or y[0] == 9 or y[0] == 10 or y[0] == 11 or y[0] == 12)):
+                nhap = input(f"{i}: ")
+                info[1][y[0]] = nhap
+        for i in info[0]:
+            x, y = np.where(info == i)
+            if info[1][y[0]] != "":
+                with open (sp + "." + index,"a") as f:
+                    f.write(f"{i}:{info[1][y[0]]}\n")
 
 c = choicePro()
 c.choices()
-
-def writeifo(sp, cols):
-    index = arr[1][cols[0]]
-    info=np.array([[f"Nhap duong dan chua source cho {sp} (Khong tu tao folder con trong duong dan)", "Nhap duong dan folder chua file index.html(Khong tu tao folder con trong duong dan)", "Nhap duong dan folder uploads", "Nhap ten cho API(vd:"")", "Nhap port cho API(vd:6020)", "Nhap branch name cua san pham", "Nhap link web(vd:https://dgn.com.vn)", "Nhap link api(vd:https://dgn.com.vn/api)", "Nhap ten db mongo cho API", "Nhap companycode", "Nhap duong dan folder cdn cua sp nay(vd:/home/cdn-api)", "Nhap link API-CDN(vd:https://cdgn.com.vn/cdn)", "Nhap secret API-CDN(vd:co 37 ky tu)"],['','','','','','','','','','','','','',]], dtype=object)
-    print(f"Vui long nhap thong tin cho san pham {sp}")
-    for i in info[0]:
-        nhap = input(f"{i}: ")
-        x, y = np.where(info == i)
-        info[1][y[0]] = nhap
-    for i in info[0]:
-        x, y = np.where(info == i)
-        if info[1][y[0]] != "":
-            with open (sp + "." + index,"a") as f:
-                f.write(f"{i}:{info[1][y[0]]}\n")
-
+cinfo = Info()
 for sp in arr[0]:
     rows, cols = np.where(arr == sp)
     if arr[1][cols] != "":
-        writeifo(sp, cols)
+        cinfo.writeinfo(sp, cols)
 
 
 
