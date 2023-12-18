@@ -72,19 +72,23 @@ class Info():
 
     def editInfo(self, sp, filename):
         number = 0
-        with open (filename,'w+') as f:
-            lines = f.readlines()
+        array2D = []
+        with open (filename,'r') as f:
             print("------------------------------------------------------------------------------")
             print(f"Thong tin ban da nhap cho san pham {sp}: ")
-            for line in lines:
+            for line in f.readlines():
                 number += 1
-                print(str(number) + line)
-            # num_edit = input("Vui lòng chọn số cần chỉnh sửa: ")
-
-
-
-            
-
+                array2D.append(line.split(':'))
+                print(str(number) + "." + line)
+            while True:
+                numEdit = input("Vui long chon so can chinh sua (Nhap 0 de thoat): ")
+                if numEdit == '0': break
+                elif numEdit.isdecimal() and numEdit <= str(len(array2D)):
+                    num = int(numEdit) - 1
+                    value = input(f"{array2D[num][0]}: ")
+                    array2D[num][1] = value
+                    print(array2D[num][1])
+                else: print("Nhap khong dung. Vui long nhap lai.")
 c = ChoicePro()
 c.choices()
 for sp in arr[0]:
@@ -92,7 +96,7 @@ for sp in arr[0]:
     rows, cols = np.where(arr == sp)
     if arr[1][cols] != "":
         filename = sp + "." + arr[1][cols[0]]
-        cinfo.writeInfo(sp, filename)
+        # cinfo.writeInfo(sp, filename)
         cinfo.editInfo(sp, filename)
 
 
