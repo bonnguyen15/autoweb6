@@ -1,7 +1,4 @@
-a = 1
-b = 6
-c = 7
-if a == 5 or (b == 6 and c == 7):
-    print('True')
-else:
-    print('False')
+import numpy as np
+arr = [[1 ,2 ,3 , 4], []]
+x, y = np.where(arr == 1)
+print(y)
