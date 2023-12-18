@@ -84,14 +84,13 @@ class Info():
 
 c = ChoicePro()
 c.choices()
-sp = 'CDN'
 for sp in arr[0]:
     cinfo = Info(sp)
     rows, cols = np.where(arr == sp)
     if arr[1][cols] != "":
         filename = sp + "." + arr[1][cols[0]]
         cinfo.writeInfo(sp, filename)
-        # cinfo.editInfo(sp, cols, filename)
+        cinfo.editInfo(sp, filename)
 
 
 
