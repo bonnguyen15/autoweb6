@@ -68,8 +68,9 @@ class Info():
         with open (self.filename,"w") as f:
             for i in self.info[0]:
                 x, y = np.where(self.info == i)
-                f.write(f"{i}={self.info[1][y[0]]}\n")
-                f.close
+                if self.info[1][y[0]] != '':
+                    f.write(f"{i}={self.info[1][y[0]]}\n")
+                    f.close
 
     def editInfo(self):
         number = 0
@@ -81,14 +82,18 @@ class Info():
                 number += 1
                 listInfo.append(line.split('='))
                 print(f"{number}.{line.split('=')[0]}: {line.split('=')[1]}")
-            while True:
-                numEdit = input("\nVui long chon so can chinh sua (Nhap 0 de thoat): ")
-                if numEdit == '0': break
-                elif numEdit.isdecimal() and numEdit <= str(len(listInfo)):
-                    num = int(numEdit) - 1
-                    value = input(f"{listInfo[num][0]}: ")
-                    listInfo[num][1] = value
-                else: print("Nhap khong dung. Vui long nhap lai.")
+            numEdit = list(map(input("\nNhap cac so can chinh sua phan cach bang dau , (Nhap 0 de thoat): ").split(',')))
+            for nums in numEdit:
+                while True:    
+                    if nums == '0': break
+                    elif nums.isdecimal() and nums <= str(len(listInfo)):
+                        num = int(nums) - 1
+                        value = input(f"{listInfo[num][0]}: ")
+                        listInfo[num][1] = value
+                        break
+                    else: 
+                        print("Nhap khong dung. Vui long nhap lai.")
+
         with open(self.filename, 'w') as f:
             for i in listInfo:
                 f.write("=".join(str(x) for x in i)+ "\n")
@@ -102,5 +107,6 @@ for sp in arr[0]:
             cinfo = Info(sp, filename)
             if not os.path.exists(filename):
                 cinfo.writeInfo()
+                cinfo.editInfo()
             else:
                 cinfo.editInfo()
