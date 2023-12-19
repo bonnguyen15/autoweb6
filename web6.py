@@ -47,57 +47,58 @@ class ChoicePro:
         self.showChoice()
         
 class Info():
-    def __init__(self, sp):
-        info = np.array([[f"Nhap duong dan chua source cho {sp} (Khong tu tao folder con trong duong dan)", "Nhap duong dan folder chua file index.html(Khong tu tao folder con trong duong dan)", "Nhap duong dan folder uploads", "Nhap ten cho API(vd:"")", "Nhap port cho API(vd:6020)", "Nhap branch name cua san pham", "Nhap link web(vd:https://dgn.com.vn)", "Nhap link api(vd:https://dgn.com.vn/api)", "Nhap ten db mongo cho API", "Nhap companycode", "Nhap duong dan folder cdn cua sp nay(vd:/home/cdn-api)", "Nhap link API-CDN(vd:https://cdgn.com.vn/cdn)", "Nhap secret API-CDN(vd:co 37 ky tu)"],
+    def __init__(self, sp, filename):
+        info = np.array([[f"Duong dan chua source cho {sp}", "Duong dan folder chua file index.html", "Duong dan folder uploads", f"Nhap ten cho API(vd:{sp})", "Nhap port cho API(vd:6020)", "Nhap branch name cua san pham", "Nhap link web(vd:https://dgn.com.vn)", "Nhap link api(vd:https://dgn.com.vn/api)", "Nhap ten db mongo cho API", "Nhap companycode", "Nhap duong dan folder cdn cua sp nay(vd:/home/cdn-api)", "Nhap link API-CDN(vd:https://cdgn.com.vn/cdn)", "Nhap secret API-CDN(vd:co 37 ky tu)"],
                      ['','','','','','','','','','','','','',]], dtype=object)
         self.info = info
         self.sp = sp
+        self.filename = filename
     def randomSecret(self):
         letters_and_digits = string.ascii_letters + string.digits
         random_string_and_digits=''.join(random.choice(letters_and_digits) for i in range(32))
         return random_string_and_digits
     
-    def writeInfo(self, filename):
+    def writeInfo(self):
         print(f"Vui long nhap thong tin cho san pham {self.sp}")
         for i in self.info[0]:
             x, y = np.where(self.info == i)
             if not (self.sp == 'CDN' and (y[0] == 1 or y[0] == 5 or y[0] == 9 or y[0] == 10 or y[0] == 11 or y[0] == 12)):
                 nhap = input(f"{i}: ")
                 self.info[1][y[0]] = nhap
-        with open (filename,"w") as f:
+        with open (self.filename,"w") as f:
             for i in self.info[0]:
                 x, y = np.where(self.info == i)
                 if self.info[1][y[0]] != "":
-                        f.write(f"{i}:{self.info[1][y[0]]}\n")
+                        f.write(f"{i}={self.info[1][y[0]]}\n")
                         f.close
 
-    def editInfo(self, filename):
+    def editInfo(self):
         number = 0
         listInfo = []
-        with open (filename,'r') as f:
+        with open (self.filename,'r') as f:
             print("------------------------------------------------------------------------------")
             print(f"Thong tin ban da nhap cho san pham {self.sp}: ")
             for line in f.read().splitlines():
                 number += 1
-                listInfo.append(line.split(':'))
-                print(str(number) + "." + line)
+                listInfo.append(line.split('='))
+                print(f"{number}.{line.split('=')[0]}: {line.split('=')[1]}")
             while True:
-                numEdit = input("Vui long chon so can chinh sua (Nhap 0 de thoat): ")
+                numEdit = input("\nVui long chon so can chinh sua (Nhap 0 de thoat): ")
                 if numEdit == '0': break
                 elif numEdit.isdecimal() and numEdit <= str(len(listInfo)):
                     num = int(numEdit) - 1
                     value = input(f"{listInfo[num][0]}: ")
                     listInfo[num][1] = value
                 else: print("Nhap khong dung. Vui long nhap lai.")
-        with open(filename, 'w') as f:
+        with open(self.filename, 'w') as f:
             for i in listInfo:
-                f.write(":".join(str(x) for x in i)+ "\n")
+                f.write("=".join(str(x) for x in i)+ "\n")
 c = ChoicePro()
 c.choices()
 for sp in arr[0]:
-    cinfo = Info(sp)
     rows, cols = np.where(arr == sp)
+    filename = sp + "." + arr[1][cols[0]]
     if arr[1][cols] != "":
-        filename = sp + "." + arr[1][cols[0]]
-        cinfo.writeInfo(filename)
-        cinfo.editInfo(filename)
+        cinfo = Info(sp, filename)
+        cinfo.writeInfo()
+        cinfo.editInfo()
