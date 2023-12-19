@@ -73,24 +73,24 @@ class Info():
 
     def editInfo(self, filename):
         number = 0
-        array2D = []
+        listInfo = []
         with open (filename,'r') as f:
             print("------------------------------------------------------------------------------")
             print(f"Thong tin ban da nhap cho san pham {self.sp}: ")
             for line in f.readlines():
                 number += 1
-                array2D.append(line.split(':'))
+                listInfo.append(line.split(':'))
                 print(str(number) + "." + line)
             while True:
                 numEdit = input("Vui long chon so can chinh sua (Nhap 0 de thoat): ")
                 if numEdit == '0': break
-                elif numEdit.isdecimal() and numEdit <= str(len(array2D)):
+                elif numEdit.isdecimal() and numEdit <= str(len(listInfo)):
                     num = int(numEdit) - 1
-                    value = input(f"{array2D[num][0]}: ")
-                    array2D[num][1] = value
+                    value = input(f"{listInfo[num][0]}: ")
+                    listInfo[num][1] = value
                 else: print("Nhap khong dung. Vui long nhap lai.")
         with open(filename, 'w') as f:
-            for i in array2D:
+            for i in listInfo:
                 f.write(":".join(str(x) for x in i)+ "\n")
 c = ChoicePro()
 c.choices()
