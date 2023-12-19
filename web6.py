@@ -48,7 +48,7 @@ class ChoicePro:
         
 class Info():
     def __init__(self, sp, filename):
-        info = np.array([[f"Duong dan chua source cho {sp}", "Duong dan folder chua file index.html", "Duong dan folder uploads", f"Nhap ten cho API(vd:{sp})", "Nhap port cho API(vd:6020)", "Nhap branch name cua san pham", "Nhap link web(vd:https://dgn.com.vn)", "Nhap link api(vd:https://dgn.com.vn/api)", "Nhap ten db mongo cho API", "Nhap companycode", "Nhap duong dan folder cdn cua sp nay(vd:/home/cdn-api)", "Nhap link API-CDN(vd:https://cdgn.com.vn/cdn)", "Nhap secret API-CDN(vd:co 37 ky tu)"],
+        info = np.array([[f"Duong dan chua source cho {sp}", "Duong dan folder chua file index.html", "Duong dan folder uploads", f"Nhap ten cho API cho {sp} (vd:{sp})", f"Nhap port API cho {sp} (vd:7020)", f"Nhap branch name cua san pham {sp}", "Nhap link web(vd:https://dgn.com.vn)", "Nhap link api(vd:https://dgn.com.vn/api)", "Nhap ten db mongo cho API", f"Nhap companycode cua san pham {sp}", f"Nhap duong dan folder cdn cho {sp}(vd:/home/cdn-api)", "Nhap link API-CDN(vd:https://cdgn.com.vn/cdn)", "Nhap secret API-CDN(vd:co 37 ky tu)"],
                      ['','','','','','','','','','','','','',]], dtype=object)
         self.info = info
         self.sp = sp
@@ -68,9 +68,8 @@ class Info():
         with open (self.filename,"w") as f:
             for i in self.info[0]:
                 x, y = np.where(self.info == i)
-                if self.info[1][y[0]] != "":
-                        f.write(f"{i}={self.info[1][y[0]]}\n")
-                        f.close
+                f.write(f"{i}={self.info[1][y[0]]}\n")
+                f.close
 
     def editInfo(self):
         number = 0
@@ -97,8 +96,11 @@ c = ChoicePro()
 c.choices()
 for sp in arr[0]:
     rows, cols = np.where(arr == sp)
-    filename = sp + "." + arr[1][cols[0]]
     if arr[1][cols] != "":
-        cinfo = Info(sp, filename)
-        cinfo.writeInfo()
-        cinfo.editInfo()
+        for i in range(int(arr[1][cols[0]])):
+            filename = sp + "." + str(i)
+            cinfo = Info(sp, filename)
+            if not os.path.exists(filename):
+                cinfo.writeInfo()
+            else:
+                cinfo.editInfo()
