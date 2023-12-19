@@ -1,0 +1,7 @@
+Duong dan chua source cho CDN=1
+Duong dan folder uploads=2
+Nhap ten cho API cho CDN (vd:CDN)=3
+Nhap port API cho CDN (vd:7020)=4
+Nhap link web(vd:https://dgn.com.vn)=5
+Nhap link api(vd:https://dgn.com.vn/api)=6
+Nhap ten db mongo cho API=7
