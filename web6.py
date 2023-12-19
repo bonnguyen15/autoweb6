@@ -77,7 +77,7 @@ class Info():
         with open (filename,'r') as f:
             print("------------------------------------------------------------------------------")
             print(f"Thong tin ban da nhap cho san pham {self.sp}: ")
-            for line in f.readlines():
+            for line in f.read().splitlines():
                 number += 1
                 listInfo.append(line.split(':'))
                 print(str(number) + "." + line)
