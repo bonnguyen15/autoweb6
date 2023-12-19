@@ -51,31 +51,32 @@ class Info():
         info = np.array([[f"Nhap duong dan chua source cho {sp} (Khong tu tao folder con trong duong dan)", "Nhap duong dan folder chua file index.html(Khong tu tao folder con trong duong dan)", "Nhap duong dan folder uploads", "Nhap ten cho API(vd:"")", "Nhap port cho API(vd:6020)", "Nhap branch name cua san pham", "Nhap link web(vd:https://dgn.com.vn)", "Nhap link api(vd:https://dgn.com.vn/api)", "Nhap ten db mongo cho API", "Nhap companycode", "Nhap duong dan folder cdn cua sp nay(vd:/home/cdn-api)", "Nhap link API-CDN(vd:https://cdgn.com.vn/cdn)", "Nhap secret API-CDN(vd:co 37 ky tu)"],
                      ['','','','','','','','','','','','','',]], dtype=object)
         self.info = info
+        self.sp = sp
     def randomSecret(self):
         letters_and_digits = string.ascii_letters + string.digits
         random_string_and_digits=''.join(random.choice(letters_and_digits) for i in range(32))
         return random_string_and_digits
     
-    def writeInfo(self, sp, filename):
-        print(f"Vui long nhap thong tin cho san pham {sp}")
+    def writeInfo(self, filename):
+        print(f"Vui long nhap thong tin cho san pham {self.sp}")
         for i in self.info[0]:
             x, y = np.where(self.info == i)
-            if not (sp == 'CDN' and (y[0] == 1 or y[0] == 5 or y[0] == 9 or y[0] == 10 or y[0] == 11 or y[0] == 12)):
+            if not (self.sp == 'CDN' and (y[0] == 1 or y[0] == 5 or y[0] == 9 or y[0] == 10 or y[0] == 11 or y[0] == 12)):
                 nhap = input(f"{i}: ")
                 self.info[1][y[0]] = nhap
-        for i in self.info[0]:
-            x, y = np.where(self.info == i)
-            if self.info[1][y[0]] != "":
-                with open (filename,"a") as f:
-                    f.write(f"{i}:{self.info[1][y[0]]}\n")
-                    f.close
+        with open (filename,"w") as f:
+            for i in self.info[0]:
+                x, y = np.where(self.info == i)
+                if self.info[1][y[0]] != "":
+                        f.write(f"{i}:{self.info[1][y[0]]}\n")
+                        f.close
 
-    def editInfo(self, sp, filename):
+    def editInfo(self, filename):
         number = 0
         array2D = []
         with open (filename,'r') as f:
             print("------------------------------------------------------------------------------")
-            print(f"Thong tin ban da nhap cho san pham {sp}: ")
+            print(f"Thong tin ban da nhap cho san pham {self.sp}: ")
             for line in f.readlines():
                 number += 1
                 array2D.append(line.split(':'))
@@ -87,8 +88,10 @@ class Info():
                     num = int(numEdit) - 1
                     value = input(f"{array2D[num][0]}: ")
                     array2D[num][1] = value
-                    print(array2D[num][1])
                 else: print("Nhap khong dung. Vui long nhap lai.")
+        with open(filename, 'w') as f:
+            for i in array2D:
+                f.write(":".join(str(x) for x in i)+ "\n")
 c = ChoicePro()
 c.choices()
 for sp in arr[0]:
@@ -96,11 +99,5 @@ for sp in arr[0]:
     rows, cols = np.where(arr == sp)
     if arr[1][cols] != "":
         filename = sp + "." + arr[1][cols[0]]
-        # cinfo.writeInfo(sp, filename)
-        cinfo.editInfo(sp, filename)
-
-
-
-        
-
-    
+        cinfo.writeInfo(filename)
+        cinfo.editInfo(filename)
