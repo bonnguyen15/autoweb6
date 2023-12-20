@@ -13,11 +13,12 @@ class ChoicePro:
         for sp in arr[0]:
             rows, cols = np.where(arr == sp)
             if arr[1][cols] != "":
-                print("Ban da chon san pham "+sp+" voi so lan cai:",arr[1][cols[0]])
+                print("Ban da chon san pham "+sp+" voi so lan cai:",arr[1][cols[0]] + "\n")
     def slProduct(self, sp):
         while True:
             sl = ""
             sl = input(f"Vui long nhap so luong muon cai cho {sp} (Mac dinh la 1): ")
+
             if sl == '': sl = '1'; return sl
             elif sl.isdecimal(): 
                 if sl <= '0': sl = '1'; return sl; break 
@@ -82,8 +83,9 @@ class Info():
                 number += 1
                 listInfo.append(line.split('='))
                 print(f"{number}.{line.split('=')[0]}: {line.split('=')[1]}")
-            numEdit = list(map(input("\nNhap cac so can chinh sua phan cach bang dau , (Nhap 0 de thoat): ").split(',')))
+            numEdit = list(map(str, input("\nNhap cac so can chinh sua phan cach bang dau , (Nhap 0 de thoat): ").split(',')))
             for nums in numEdit:
+                index = numEdit.index(nums)
                 while True:    
                     if nums == '0': break
                     elif nums.isdecimal() and nums <= str(len(listInfo)):
@@ -91,12 +93,21 @@ class Info():
                         value = input(f"{listInfo[num][0]}: ")
                         listInfo[num][1] = value
                         break
-                    else: 
-                        print("Nhap khong dung. Vui long nhap lai.")
-
+                    else:
+                        nums = input(f"Vi tri thu {index + 1} nhap khong dung. Vui long nhap lai hoac nhap 0 de bo qua: ")
         with open(self.filename, 'w') as f:
             for i in listInfo:
                 f.write("=".join(str(x) for x in i)+ "\n")
+    def showInfo(self):
+        print(f"Thong tin moi nhat cua san pham {sp}")
+        number = 0
+        listInfo = []
+        with open (self.filename,'r') as f:
+            for line in f.read().splitlines():
+                number += 1
+                listInfo.append(line.split('='))
+                print(f"{number}.{line.split('=')[0]}: {line.split('=')[1]}")
+
 c = ChoicePro()
 c.choices()
 for sp in arr[0]:
@@ -107,6 +118,7 @@ for sp in arr[0]:
             cinfo = Info(sp, filename)
             if not os.path.exists(filename):
                 cinfo.writeInfo()
-                cinfo.editInfo()
             else:
                 cinfo.editInfo()
+                cinfo.showInfo()
+            cinfo.showInfo()
