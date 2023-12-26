@@ -100,12 +100,11 @@ class Info():
                                 cdn_private, cdn_public, secret_cdn = self.findSecretCDN(file_cdn)
                                 input_info[1][11] = cdn_private; input_info[1][12] = cdn_public; input_info[1][13] = secret_cdn
                                 break
+                            elif nhap == '0':
+                                break
                             else:
                                 nhap = input(f"Khong tim thay folder CDN, Vui long nhap lai hoac nhap 0 de thoat: ")
-                                if nhap == '0':
-                                    break
-                                else:
-                                    input_info[1][10] = nhap
+                                input_info[1][10] = nhap
                     else:
                         nhap = input(f"{i}: ")
                         input_info[1][y[0]] = nhap
