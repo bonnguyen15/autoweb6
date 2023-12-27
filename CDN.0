@@ -1,0 +1,16 @@
+Duong dan chua source cho CDN=1
+Duong dan folder chua file index.html=
+Duong dan folder uploads=2
+Ten API cho CDN (vd:CDN)=3
+Port API cho CDN (vd:7020)=4
+Branch name cua san pham CDN=production
+Link web cua CDN (vd:https://dgn.com.vn)=
+Link api cua CDN (vd:https://dgn.com.vn/api)=5
+Ten db mongo cho CDN=6
+Companycode cua san pham CDN=
+Duong dan folder cdn cho CDN(vd:/home/cdn-api)=
+Link CDN-PRIVATE cho CDN(vd:https://192.168.1.5/cdn)=7
+Link CDN-PUBLIC cho CDN(vd:https://cdgn.com.vn/cdn)=8
+Secret CDN cho CDN=
+San pham nay dung cho link KC hay PRO=
+Secret cho CDN=C2ipgkBu0zkX08wCUp69UBaj976D1syZ

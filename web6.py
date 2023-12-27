@@ -85,7 +85,7 @@ class Info():
             x, y = np.where(input_info == i)
             if 'API' in self.sp and y[0] == 1:
                 pass
-            elif not (self.sp == 'CDN' and (y[0] == 1 or y[0] == 5 or y[0] == 6 or y[0] == 7 or y[0] == 9 or y[0] == 10 or y[0] == 13 or y[0] == 14) or y[0] == 15):
+            elif not (self.sp == 'CDN' and (y[0] == 1 or y[0] == 5 or y[0] == 6 or y[0] == 9 or y[0] == 10 or y[0] == 13 or y[0] == 14) or y[0] == 15):
                 if y[0] == 14:
                     linkstatus = ['PRO', 'KC']
                     while True:
@@ -98,7 +98,7 @@ class Info():
                 elif y[0] == 3:
                     nhap = input(f"{i}: ").upper()
                     input_info[1][y[0]] = nhap
-                elif y[0] == 11 or y[0] == 12 or y[0] == 13:
+                elif self.sp != 'CDN' and (y[0] == 11 or y[0] == 12 or y[0] == 13):
                     if input_info[1][10] != '':
                         while True:
                             if os.path.isfile(f'{input_info[1][10]}\process.json'):
@@ -181,13 +181,10 @@ class replaceEnv():
     def gitCode(self):
         giturl = arr[2][cols[0]].split('&')[0]
         os.system(f"git clone https://ptecdgn:{passgit}@bitbucket.org/diginetvn/{giturl} {listInfo[0][1]}\{giturl}")
-    def replaceprocess(self, sp):
+    def replaceprocess(self, listInfo):
         giturl = arr[2][cols[0]].split('&')[0]
         os.chdir(f"{listInfo[0][1]}\{giturl}")
-        if sp == 'CDN':
-            os.system(f"git fetch && git checkout production")
-        else:
-            os.system(f"git fetch && git checkout development")
+        os.system(f"git fetch && git checkout {listInfo[5][1]}")
         shutil.copyfile('process.json.copy','process.json')
 c = ChoiceSP()
 c.choices()
@@ -209,4 +206,4 @@ for sp in arr[0]:
             cinfo.editInfo(listInfo, numarr)
             cinfo.createFolder(listInfo)
             creplace = replaceEnv()
-            creplace.gitCode()
+            creplace.gitCode(listInfo)
