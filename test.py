@@ -1,12 +1,12 @@
 import string, random
 import numpy as np
 # input_info = np.array([[''],['']], dtype=object)
-a = 'ERP-API'
-
-if 'API' in a:
-    print('là api')
+numarr = [1, 2, 3, 4, 5, 6, 7, '8', 9, 10, 12, 13, 14, 15, 16]
+num = '8'
+if num.isdecimal() and num in numarr:
+    print('co')
 else:
-    print('không phải api')
+    print('khong')
     
 
 # def replaceFile(self, replace_file, search_str, old_str, new_str):

@@ -1,5 +1,4 @@
 import os, string, random, time, shutil, json
-from collections import OrderedDict
 try:
     import numpy as np
 except:
@@ -9,8 +8,10 @@ arr = np.array([['CDN', 'HR-WEB', 'HR-API', "BI-WEB", "BI-API", "ERP-WEB", "ERP-
                 ['','','','','','','','','','',''],
                 ['','','','','','','','','','',''],
                 ['','','','','','','','','','','']], dtype=object)
+passgit = 'Ltt3mJvFr5uuYqUjWCQY'
+#"0.Duong dan chua source cho {sp}", "1.Duong dan folder chua file index.html", "2.Duong dan folder uploads", "3.Nhap ten cho API cho {sp} (vd:{sp})", "4.Nhap port API cho {sp} (vd:7020)", "5.Nhap branch name cua san pham {sp}", "6.Nhap link web(vd:https://dgn.com.vn)", "7.Nhap link api(vd:https://dgn.com.vn/api)", "8.Nhap ten db mongo cho API", "9.Nhap companycode cua san pham {sp}", "10.Nhap duong dan folder cdn cho {sp}(vd:/home/cdn-api)", "11.Nhap link CDN-PRIVATE cho {sp}(vd:https://192.168.1.5/cdn)","12.Nhap link CDN-PUBLIC cho {sp}(vd:https://cdgn.com.vn/cdn)", "13.Nhap secret CDN cho {sp}", "14.San pham nay dung cho link KC hay PRO", "15.Secret cho sp {sp}"]
 
-class ChoicePro:
+class ChoiceSP:
     def __init__(self):
         pass
     def showChoice(self):
@@ -51,166 +52,73 @@ class ChoicePro:
                     case "11": print("Ban da chon EOFFICE-API"); num = int(self.slProduct(arr[0][10])); arr[1][10] = num; arr[2][10] = 'dgn-eoffice-api'; arr[3][10] = 'EOFFICE'; break
                     case _: choice = input(f"Vi tri thu {index + 1} nhap khong dung. Vui long nhap lai hoac nhap 0 de bo qua: ")
         self.showChoice()
-        
-class Info():
+
+class Info(): 
     def __init__(self, sp, filename):
         global input_info
-        input_info = np.array([[f"Duong dan chua source cho {sp}", "Duong dan folder chua file index.html", "Duong dan folder uploads", f"Nhap ten cho API cho {sp} (vd:{sp})", f"Nhap port API cho {sp} (vd:7020)", f"Nhap branch name cua san pham {sp}", "Nhap link web(vd:https://dgn.com.vn)", "Nhap link api(vd:https://dgn.com.vn/api)", "Nhap ten db mongo cho API", f"Nhap companycode cua san pham {sp}", f"Nhap duong dan folder cdn cho {sp}(vd:/home/cdn-api)", "Nhap link API-CDN(vd:https://cdgn.com.vn/cdn)", "Nhap secret API-CDN(vd:co 37 ky tu)"],
-                     ['','','','','','','','','','','','','',]], dtype=object)
-        self.info = input_info
+        input_info = np.array([[f"Duong dan chua source cho {sp}", "Duong dan folder chua file index.html", "Duong dan folder uploads", f"Nhap ten cho API cho {sp} (vd:{sp})", f"Nhap port API cho {sp} (vd:7020)", f"Nhap branch name cua san pham {sp}", "Nhap link web(vd:https://dgn.com.vn)", "Nhap link api(vd:https://dgn.com.vn/api)", "Nhap ten db mongo cho API", f"Nhap companycode cua san pham {sp}", f"Nhap duong dan folder cdn cho {sp}(vd:/home/cdn-api)", f"Nhap link CDN-PRIVATE cho {sp}(vd:https://192.168.1.5/cdn)",f"Nhap link CDN-PUBLIC cho {sp}(vd:https://cdgn.com.vn/cdn)", f"Nhap secret CDN cho {sp}", "San pham nay dung cho link KC hay PRO", f"Secret cho sp {sp}"],
+                     ['','','','','','','','','','','','','','','','']], dtype=object)
         self.sp = sp
         self.filename = filename
-
     def randomSecret(self):
         letters_and_digits = string.ascii_letters + string.digits
         random_string_and_digits=''.join(random.choice(letters_and_digits) for i in range(32))
         return random_string_and_digits
     
+    def findInfoCDN(self, cdn_file):
+        with open(cdn_file,'r') as f:
+            for line in f:
+                if 'CDN_URL_INTERNAL' in line:
+                    a = line.split('"')[3]
+                if 'CDN_URL_PUBLIC' in line:
+                    b = line.split('"')[3]
+                if 'CDN_SECRET' in line:
+                    c = line.split('"')[3]
+        return a,b,c
     def writeInfo(self):
         print("------------------------------------------------------------------------------")
         print(f"Vui long nhap thong tin cho san pham {self.sp}")
-        for i in self.info[0]:
-            x, y = np.where(self.info == i)
-            if not (self.sp == 'CDN' and (y[0] == 1 or y[0] == 5 or y[0] == 9 or y[0] == 10 or y[0] == 11 or y[0] == 12)):
-                nhap = input(f"{i}: ")
-                self.info[1][y[0]] = nhap
-        with open (self.filename,"w") as f:
-            for i in self.info[0]:
-                x, y = np.where(self.info == i)
-                if self.info[1][y[0]] != '':
-                    f.write(f"{i}={self.info[1][y[0]]}\n")
-                    f.close
-
-    def editInfo(self):
-        number = 0
-        listInfo = []
-        with open (self.filename,'r') as f:
-            print("------------------------------------------------------------------------------")
-            print(f"Thong tin ban da nhap cho san pham {self.sp}: ")
-            for line in f.read().splitlines():
-                number += 1
-                listInfo.append(line.split('='))
-                print(f"{number}.{line.split('=')[0]}: {line.split('=')[1]}")
-            numEdit = list(map(str, input("\nNhap cac so can chinh sua phan cach bang dau , (Nhap 0 de thoat): ").split(',')))
-            for nums in numEdit:
-                index = numEdit.index(nums)
-                while True:    
-                    if nums == '0': break
-                    elif nums.isdecimal() and nums <= str(len(listInfo)):
-                        num = int(nums) - 1
-                        value = input(f"{listInfo[num][0]}: ")
-                        listInfo[num][1] = value
-                        break
-                    else:
-                        nums = input(f"Vi tri thu {index + 1} nhap khong dung. Vui long nhap lai hoac nhap 0 de bo qua: ")
-        with open(self.filename, 'w') as f:
-            for i in listInfo:
-                f.write("=".join(str(x) for x in i)+ "\n")
-    def showInfo(self):
-        print("------------------------------------------------------------------------------")
-        print(f"Thong tin moi nhat cua san pham {sp}")
-        number = 0
-        listInfo = []
-        with open (self.filename,'r') as f:
-            for line in f.read().splitlines():
-                number += 1
-                listInfo.append(line.split('='))
-                print(f"{number}.{line.split('=')[0]}: {line.split('=')[1]}")
-        return listInfo
-
-class GetVarAndCrtFolder():
-    def __init__(self, filename, sp, spApi):
-        self.filename = filename ; self.sp = sp; self.spApi = spApi
-
-    def SearchStr(self,word):
-         with open(self.filename, 'r') as file:
-             lines = file.readlines()
-             for line in lines:
-                 if line.find(word) != -1:
-                    var = line.split('=')
-                    return var[1].strip()
-    def getVarInFile(self):
-        global name_api, port_api, branch, link_web
-        # for i in input_info[0]:
-        #     print(i)
-
-    def createFolder(self):
-        with open(self.filename, 'r') as f:
-            global dirsource, diruploads, diruploads
-            if self.sp == ('CDN' or self.spApi):
-                dirsource = self.SearchStr('Duong dan chua source cho')
-                diruploads = self.SearchStr('Duong dan folder uploads')
-                try: os.makedirs(dirsource, exist_ok=True);os.makedirs(diruploads, exist_ok=True)
-                except: print('Khong tao duoc folder')
-            else: 
-                dirsource = self.SearchStr('Duong dan chua source cho')
-                diruploads = self.SearchStr('Duong dan folder uploads')
-                dirindex = self.SearchStr('Duong dan folder chua file index.html')
-                try: os.makedirs(dirsource, exist_ok=True);os.makedirs(diruploads, exist_ok=True);os.makedirs(dirindex, exist_ok=True)
-                except: print('Khong tao duoc folder')
-        self.getVarInFile()
-class ReplaceFile():
-    passgit = 'Ltt3mJvFr5uuYqUjWCQY'
-    def __init__(self, filename, cols):
-        self.api = arr[2][cols[0]].split('&')
-        self.sp_env = arr[3][cols[0]]
-
-    def replaceFile(self, replace_file, search_str, old_str, new_str):
-        with open(replace_file, 'r') as f:
-            lines = f.readlines()
-        new_lines = []
-        for line in lines:
-            if search_str in line:
-                new_line = line.replace(old_str, new_str)
-                new_lines.append(new_line)
+        for i in input_info[0]:
+            x, y = np.where(input_info == i)
+            if 'API' in self.sp and y[0] == 1:
+                pass
+            elif not (self.sp == 'CDN' and (y[0] == 1 or y[0] == 5 or y[0] == 6 or y[0] == 7 or y[0] == 9 or y[0] == 10 or y[0] == 13 or y[0] == 14) or y[0] == 15):
+                if y[0] == 14:
+                    linkstatus = ['PRO', 'KC']
+                    while True:
+                        nhap = input(f"{i}: ").upper()
+                        if nhap in linkstatus:
+                            input_info[1][y[0]] = nhap
+                            break
+                        else:
+                            print('Chi nhap kc hoac pro')
+                elif y[0] == 11 or y[0] == 12 or y[0] == 13:
+                    if input_info[1][10] != '':
+                        while True:
+                            if os.path.isfile(f'{input_info[1][10]}\process.json'):
+                                file_cdn = f'{input_info[1][10]}\process.json'
+                                cdn_private, cdn_public, secret_cdn = self.findSecretCDN(file_cdn)
+                                input_info[1][11] = cdn_private; input_info[1][12] = cdn_public; input_info[1][13] = secret_cdn
+                                break
+                            elif nhap == '0':
+                                break
+                            else:
+                                nhap = input(f"Khong tim thay folder CDN, Vui long nhap lai hoac nhap 0 de thoat: ")
+                                input_info[1][10] = nhap
+                else:
+                    nhap = input(f"{i}: ")
+                    input_info[1][y[0]] = nhap
             else:
-                new_lines.append(line)
-        with open(replace_file, 'w') as f:
-            f.writelines(new_lines)
-    def file(self):
-        bien_process=["name", "NODE_PORT", f"{self.sp_env}_SECRET", f"{self.sp_env}_UPLOAD_DIR", f"{self.sp_env}_UPLOAD_URL", f"{self.sp_env}_API_URL", f"{self.sp_env}_WEB_URL", "${arrinput[15]}_DATABASE_NAME", f"{self.sp_env}_TRACKING_BRANCH", "max_memory_restart", "CDN_API_URL", "CDN_API_SECRET", "NODE_ENV", "CDN_URL_INTERNAL", "CDN_URL_PUBLIC"]
+                if self.sp == 'CDN':
+                    input_info[1][5] = 'production'; input_info[1][15] = self.randomSecret()
+                else:
+                    input_info[1][15] = self.randomSecret()
+        with open (self.filename,"w") as f:
+            for i in input_info[0]:
+                x, y = np.where(input_info == i)
+                f.write(f"{i}={input_info[1][y[0]]}\n")
+                f.close
 
 
-    def configApi(self):
-        os.system(f"git clone https://ptecdgn:{self.passgit}@bitbucket.org/diginetvn/{self.api[0]} {dirsource}\{self.api[0]}")
-        os.chdir(f"{dirsource}\{self.api[0]}")
-        if self.sp == 'CDN':
-            os.system(f"git fetch && git checkout production")
-        else:
-            os.system(f"git fetch && git checkout development")
-        shutil.copyfile('process.json.copy','process.json')
-
-c = ChoicePro()
+c = ChoiceSP()
 c.choices()
-# for sp in arr[0]:
-#         rows, cols = np.where(arr == sp)
-#         if arr[1][cols] != "":
-#             for i in range(int(arr[1][cols[0]])):
-#                 filename = sp + "." + str(i)
-#                 cinfo = Info(sp, filename)
-#                 if not os.path.exists(filename):
-#                     cinfo.writeInfo()
-#                     cinfo.editInfo()
-#                 else:
-#                     cinfo.editInfo()
-                    
-# for sp in arr[0]:
-#         rows, cols = np.where(arr == sp)
-#         if arr[1][cols] != "":
-#             for i in range(int(arr[1][cols[0]])):
-#                 filename = sp + "." + str(i)
-#                 cinfo = Info(sp, filename)
-#                 listInfo = cinfo.showInfo()
-
-for sp in arr[0]:
-        spApi = sp[-3:]
-        rows, cols = np.where(arr == sp)
-        var = arr[1][cols[0]]
-        if var != "":
-            for i in range(int(var)):
-                filename = sp + "." + str(i)
-                gvar_ctrf = GetVarAndCrtFolder(filename, sp, spApi)
-                gvar_ctrf.getVarInFile()
-                # spConfig.configApi()
-                
-
