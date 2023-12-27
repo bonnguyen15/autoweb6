@@ -8,7 +8,7 @@ if num.isdecimal() and num in numarr:
 else:
     print('khong')
     
-
+#fefefe
 # def replaceFile(self, replace_file, search_str, old_str, new_str):
 #     with open(replace_file, 'r') as f:
 #         lines = f.readlines()
@@ -21,3 +21,4 @@ else:
 #             new_lines.append(line)
 #     with open(replace_file, 'w') as f:
 #         f.writelines(new_lines)
+    
