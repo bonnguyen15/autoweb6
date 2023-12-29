@@ -1,4 +1,4 @@
-import os, string, random, time, shutil, json
+import os, string, random, time, shutil, tempfile
 try:
     import numpy as np
 except:
@@ -10,7 +10,11 @@ arr = np.array([['CDN', 'HR-WEB', 'HR-API', "BI-WEB", "BI-API", "ERP-WEB", "ERP-
                 ['','','','','','','','','','','']], dtype=object)
 passgit = 'Ltt3mJvFr5uuYqUjWCQY'
 cdn_private = cdn_public = secret_cdn = ''
-#"0.Duong dan chua source cho {sp}", "1.Duong dan folder chua file index.html", "2.Duong dan folder uploads", "3.Nhap ten cho API cho {sp} (vd:{sp})", "4.Nhap port API cho {sp} (vd:7020)", "5.Nhap branch name cua san pham {sp}", "6.Nhap link web(vd:https://dgn.com.vn)", "7.Nhap link api(vd:https://dgn.com.vn/api)", "8.Nhap ten db mongo cho API", "9.Nhap companycode cua san pham {sp}", "10.Nhap duong dan folder cdn cho {sp}(vd:/home/cdn-api)", "11.Nhap link CDN-PRIVATE cho {sp}(vd:https://192.168.1.5/cdn)","12.Nhap link CDN-PUBLIC cho {sp}(vd:https://cdgn.com.vn/cdn)", "13.Nhap secret CDN cho {sp}", "14.San pham nay dung cho link KC hay PRO", "15.Secret cho sp {sp}"]
+slash = '\\'
+temp_f = tempfile.gettempdir()
+os.makedirs(f'{temp_f}{slash}value{slash}', exist_ok=True)
+temp_f = f'{temp_f}{slash}value{slash}'
+#"0.Duong dan chua source cho {sp}", "1.Duong dan folder chua file index.html", "2.Duong dan folder uploads", "3.Nhap ten cho API cho {sp} (vd:{sp})", "4.Nhap port API cho {sp} (vd:7020)", "5.Nhap branch name cua san pham {sp}", "6.Nhap link web(vd:https://dgn.com.vn)", "7.Nhap link api(vd:https://dgn.com.vn/api)", "8.Nhap ten db mongo cho API", "9.Nhap companycode cua san pham {sp}", "10.Nhap link CDN-PRIVATE cho {sp}(vd:https://192.168.1.5/cdn)","11.Nhap link CDN-PUBLIC cho {sp}(vd:https://cdgn.com.vn/cdn)", "12.Nhap secret CDN cho {sp}", "13.San pham nay dung cho link KC hay PRO", "14.Secret cho sp {sp}"]
 
 class ChoiceSP:
     def __init__(self):
@@ -57,27 +61,38 @@ class ChoiceSP:
 class Info(): 
     def __init__(self, sp, filename):
         global input_info
-        input_info = np.array([[f"Duong dan chua source cho {sp}", "Duong dan folder chua file index.html", "Duong dan folder uploads", f"Ten API cho {sp} (vd:{sp})", f"Port API cho {sp} (vd:7020)", f"Branch name cua san pham {sp}", f"Link web cua {sp} (vd:https://dgn.com.vn)", f"Link api cua {sp} (vd:https://dgn.com.vn/api)", f"Ten db mongo cho {sp}", f"Companycode cua san pham {sp}", f"Duong dan folder cdn cho {sp}(vd:/home/cdn-api)", f"Link CDN-PRIVATE cho {sp}(vd:https://192.168.1.5/cdn)",f"Link CDN-PUBLIC cho {sp}(vd:https://cdgn.com.vn/cdn)", f"Secret CDN cho {sp}", "San pham nay dung cho link KC hay PRO", f"Secret cho {sp}"],
-                     ['','','','','','','','','','','','','','','','']], dtype=object)
+        input_info = np.array([[f"Duong dan chua source cho {sp}", "Duong dan folder chua file index.html", "Duong dan folder uploads", f"Ten API cho {sp} (vd:{sp})", f"Port API cho {sp} (vd:7020)", f"Branch name cua san pham {sp}", f"Link web cua {sp} (vd:https://dgn.com.vn)", f"Link api cua {sp} (vd:https://dgn.com.vn/api)", f"Ten db mongo cho {sp}", f"Companycode cua san pham {sp}", f"Link CDN-PRIVATE cho {sp}(vd:https://192.168.1.5/cdn)",f"Link CDN-PUBLIC cho {sp}(vd:https://cdgn.com.vn/cdn)", f"Secret CDN cho {sp}", "San pham nay dung cho link KC hay PRO", f"Secret cho {sp}"],
+                     ['','','','','','','','','','','','','','','']], dtype=object)
         self.sp = sp
         self.filename = filename
-
     def randomSecret(self):
         letters_and_digits = string.ascii_letters + string.digits
         random_string_and_digits=''.join(random.choice(letters_and_digits) for i in range(32))
         return random_string_and_digits
-    
-    def findSecretCDN(self, cdn_file):
-        with open(cdn_file,'r') as f:
-            for line in f:
-                if 'CDN_URL_INTERNAL' in line:
-                    a = line.split('"')[3]
-                if 'CDN_URL_PUBLIC' in line:
-                    b = line.split('"')[3]
-                if 'CDN_SECRET' in line:
-                    c = line.split('"')[3]
-        return a,b,c
-                    
+    def findInfoCDN(self, prefix):
+        nameapi = []
+        info_cdn_file = []
+        for root, dirs, files in os.walk(temp_f):
+            for file in files:
+                if file.startswith(prefix):  
+                    info_cdn_file.append(file)
+        for number, i in enumerate(info_cdn_file, 1):
+            with open(temp_f + i, 'r') as f:
+                for line in f:
+                    if 'Ten API cho CDN' in line:
+                        nameapi.append(line.split('=')[1])
+                        print(f'{number}.{info_cdn_file[number - 1]} voi ten API la \'{(nameapi[number - 1]).strip()}\'')
+        nhap = input(f'Vui long chon file thong tin chua CDN se cai cho {sp}: ')
+        while True:
+            if nhap.isdecimal() and nhap <= str(len(nameapi)) and nhap >= str('1'):
+                with open(temp_f + info_cdn_file[int(nhap) - 1], 'r') as f:
+                    for line in f:
+                        if 'Link CDN-PRIVATE' in line: cdn_private = (line.split('=')[1]).strip()
+                        if 'Link CDN-PUBLIC' in line: cdn_public = (line.split('=')[1]).strip()
+                        if 'Secret cho CDN' in line: secret_cdn = (line.split('=')[1]).strip()
+                return cdn_private, cdn_public, secret_cdn
+            else:
+                nhap = input('Ban chon chua dung. Vui long chon lai: ')
     def writeInfo(self):
         print("------------------------------------------------------------------------------")
         print(f"Vui long nhap thong tin cho san pham {self.sp}")
@@ -85,8 +100,8 @@ class Info():
             x, y = np.where(input_info == i)
             if 'API' in self.sp and y[0] == 1:
                 pass
-            elif not (self.sp == 'CDN' and (y[0] == 1 or y[0] == 5 or y[0] == 6 or y[0] == 9 or y[0] == 10 or y[0] == 13 or y[0] == 14) or y[0] == 15):
-                if y[0] == 14:
+            elif not (self.sp == 'CDN' and (y[0] == 1 or y[0] == 5 or y[0] == 6 or y[0] == 7 or y[0] == 9 or y[0] == 12 or y[0] == 13) or y[0] == 14):
+                if y[0] == 13:
                     linkstatus = ['PRO', 'KC']
                     while True:
                         nhap = input(f"{i}: ").upper()
@@ -98,27 +113,20 @@ class Info():
                 elif y[0] == 3:
                     nhap = input(f"{i}: ").upper()
                     input_info[1][y[0]] = nhap
-                elif self.sp != 'CDN' and (y[0] == 11 or y[0] == 12 or y[0] == 13):
-                    if input_info[1][10] != '':
-                        while True:
-                            if os.path.isfile(f'{input_info[1][10]}\process.json'):
-                                file_cdn = f'{input_info[1][10]}\process.json'
-                                cdn_private, cdn_public, secret_cdn = self.findSecretCDN(file_cdn)
-                                input_info[1][11] = cdn_private; input_info[1][12] = cdn_public; input_info[1][13] = secret_cdn
-                                break
-                            elif nhap == '0':
-                                break
-                            else:
-                                nhap = input(f"Khong tim thay folder CDN, Vui long nhap lai hoac nhap 0 de thoat: ")
-                                input_info[1][10] = nhap
+                elif self.sp != 'CDN' and (y[0] == 10 or y[0] == 11 or y[0] == 12):
+                    if y[0] == 10:
+                        cdn_private, cdn_public, secret_cdn = self.findInfoCDN('CDN')
+                        input_info[1][10] = cdn_private; input_info[1][11] = cdn_public; input_info[1][12] = secret_cdn
+                    else:
+                        pass
                 else:
                     nhap = input(f"{i}: ")
                     input_info[1][y[0]] = nhap
             else:
                 if self.sp == 'CDN':
-                    input_info[1][5] = 'production'; input_info[1][15] = self.randomSecret()
+                    input_info[1][5] = 'production'; input_info[1][14] = self.randomSecret()
                 else:
-                    input_info[1][15] = self.randomSecret()
+                    input_info[1][14] = self.randomSecret()
         with open (self.filename,"w") as f:
             for i in input_info[0]:
                 x, y = np.where(input_info == i)
@@ -126,28 +134,23 @@ class Info():
                 f.close
     def readInfo(self):
         listInfo = []
-        global cdn_private, cdn_public, secret_cdn
         with open (self.filename,'r') as f:
             for line in f.read().splitlines():
                 listInfo.append(line.split('='))
-        if self.sp == 'CDN':
-            cdn_private = listInfo[11][1]; cdn_public = listInfo[12][1]; secret_cdn = listInfo[15][1]
-        else:
-            if all(x is not None for x in [cdn_private, cdn_public,secret_cdn]):
-                listInfo[11][1] = cdn_private; listInfo[12][1] = cdn_public; listInfo[13][1] =secret_cdn
-        return listInfo
-        
+        if self.sp != 'CDN' and listInfo[10][1] == '':
+                cdn_private, cdn_public, secret_cdn = self.findInfoCDN('CDN')
+                listInfo[10][1] = cdn_private; listInfo[11][1] = cdn_public; listInfo[12][1] = secret_cdn
+        return listInfo   
     def showInfo(self):
-        print("------------------------------------------------------------------------------")
-        print(f"Thong tin moi nhat cua san pham {sp}")
         listInfo = self.readInfo()
         numarr = []
+        print("------------------------------------------------------------------------------")
+        print(f"Thong tin moi nhat cua san pham {sp}")
         for number, i in enumerate(listInfo, 1):
             if i[1] != '':
                 print (f'{number}.{i[0]}: {i[1]}')
                 numarr.append(str(number))
-        return listInfo, numarr
-    
+        return listInfo, numarr   
     def editInfo(self, listInfo, numarr):
         numEdit = list(map(str, input("\nNhap cac so can chinh sua phan cach bang dau , (Nhap 0 de thoat): ").split(',')))
         for nums in numEdit:
@@ -157,7 +160,7 @@ class Info():
                 elif nums.isdecimal() and nums in numarr:
                     num = int(nums) - 1
                     value = input(f"{listInfo[num][0]}: ")
-                    if nums == '15' or nums == '4':
+                    if nums == '14' or nums == '4':
                         value = value.upper()
                     listInfo[num][1] = value
                     break
@@ -165,34 +168,99 @@ class Info():
                     nums = input(f"Vi tri thu {index + 1} nhap khong dung. Vui long nhap lai hoac nhap 0 de bo qua: ")
         with open(self.filename, 'w') as f:
             for i in listInfo:
-                f.write("=".join(str(x) for x in i)+ "\n")
-    
-    def createFolder(self, listInfo):
+                f.write("=".join(str(x) for x in i)+ "\n")   
+class replaceEnv():
+    def __init__(self, listInfo, sp):
+        self.listInfo = listInfo; self.sp = sp
+    def createFolder(self):
         if self.sp == 'CDN' or 'API' in self.sp:
-            try: os.makedirs(listInfo[0][1], exist_ok=True);os.makedirs(listInfo[2][1], exist_ok=True)
+            try: os.makedirs(self.listInfo[0][1], exist_ok=True);os.makedirs(self.listInfo[2][1], exist_ok=True)
             except: print('Khong tao duoc folder')
         else: 
-            try: os.makedirs(listInfo[0][1], exist_ok=True);os.makedirs(listInfo[1][1], exist_ok=True);os.makedirs(listInfo[2][1], exist_ok=True)
+            try: os.makedirs(self.listInfo[0][1], exist_ok=True);os.makedirs(self.listInfo[1][1], exist_ok=True);os.makedirs(self.listInfo[2][1], exist_ok=True)
             except: print('Khong tao duoc folder')
-
-class replaceEnv():
-    def __init__(self):
-        pass
     def gitCode(self):
         giturl = arr[2][cols[0]].split('&')[0]
-        os.system(f"git clone https://ptecdgn:{passgit}@bitbucket.org/diginetvn/{giturl} {listInfo[0][1]}\{giturl}")
-    def replaceprocess(self, listInfo):
+        if not os.path.exists(f'{self.listInfo[0][1]}{slash}{giturl}'):
+            os.system(f"git clone https://ptecdgn:{passgit}@bitbucket.org/diginetvn/{giturl} {self.listInfo[0][1]}{slash}{giturl}")
+            if len(arr[2][cols[0]].split('&')) > 1:
+                giturl = arr[2][cols[0]].split('&')[1]
+                os.system(f"git clone https://ptecdgn:{passgit}@bitbucket.org/diginetvn/{giturl} {self.listInfo[0][1]}{slash}{giturl}")
+        if self.sp == 'HR-WEB' and not os.path.exists(f'{self.listInfo[0][1]}{slash}hrm-ui'):
+            os.system(f"git clone https://ptecdgn:{passgit}@bitbucket.org/diginetvn/hrm-ui {self.listInfo[0][1]}{slash}hrm-ui")
+    def createVar(self, giturl):
+        link_web_cut = '/'.join(self.listInfo[6][1].split('/')[3:])
+        if giturl != 'hrm-ui':
+            if link_web_cut == '':
+                react_app_root = '/'
+            else:
+                react_app_root = f'/{link_web_cut}/'
+        else:
+            listInfo[6][1] = f'{listInfo[6][1]}/hrm'
+            if link_web_cut == '':
+                react_app_root = '/hrm/'
+            else:
+                react_app_root = f'/{link_web_cut}/hrm/'
+        return react_app_root, listInfo[6][1]
+    def replaceApi(self):
+        if self.sp == 'CDN': node_evn = 'production'
+        else: node_evn = 'development'
+        bien_process = ['name', 'NODE_PORT', f"{arr[3][cols[0]]}_SECRET", f"{arr[3][cols[0]]}_UPLOAD_DIR", f"{arr[3][cols[0]]}_UPLOAD_URL", f"{arr[3][cols[0]]}_API_URL", f"{arr[3][cols[0]]}_WEB_URL", f"{arr[3][cols[0]]}_DATABASE_NAME", f"{arr[3][cols[0]]}_TRACKING_BRANCH", 'max_memory_restart', 'CDN_API_URL', 'CDN_API_SECRET', 'NODE_ENV', 'CDN_URL_INTERNAL', 'CDN_URL_PUBLIC']
+        bien_process2 = [self.listInfo[3][1],self.listInfo[4][1],self.listInfo[14][1],self.listInfo[2][1],f'{self.listInfo[6][1]}/uploads',self.listInfo[7][1],self.listInfo[6][1],self.listInfo[8][1],self.listInfo[5][1],'2000M',self.listInfo[11][1],self.listInfo[12][1],node_evn,self.listInfo[10][1],self.listInfo[11][1]] 
         giturl = arr[2][cols[0]].split('&')[0]
-        os.chdir(f"{listInfo[0][1]}\{giturl}")
-        os.system(f"git fetch && git checkout {listInfo[5][1]}")
+        file_process = f"{self.listInfo[0][1]}{slash}{giturl}{slash}process.json"
+        os.chdir(f"{self.listInfo[0][1]}{slash}{giturl}")
+        os.system(f"git fetch && git checkout {self.listInfo[5][1]}")
         shutil.copyfile('process.json.copy','process.json')
+        for index,i in enumerate(bien_process,0):
+            with open(file_process, 'r+') as jsonFile:
+                lines = jsonFile.readlines()
+            new_lines=[]
+            for line in lines:
+                if i in line:
+                    a = line.split('"')[3]
+                    new_line = line.replace(a, bien_process2[index])
+                    new_lines.append(new_line)
+                else:
+                    new_lines.append(line)
+            with open(file_process, 'w') as jsonFile:
+                jsonFile.writelines(new_lines)
+    def replaceUI(self, giturl):
+        react_app_root, listInfo[6][1] = self.createVar(giturl)
+        bien_env=['REACT_APP_ROOT', 'REACT_APP_API', 'REACT_APP_WEB', 'REACT_APP_SECRET', 'REACT_APP_CDN_URL', 'REACT_APP_CDN_SECRET', 'REACT_APP_COMPANYCODE', 'REACT_APP_ENV', 'GENERATE_SOURCEMAP']
+        bien_env2=[f"{react_app_root}", f"{listInfo[7][1]}", f"{listInfo[6][1]}", f"{listInfo[14][1]}", f"{listInfo[11][1]}", f"{listInfo[12][1]}", f"{listInfo[9][1]}", f"{listInfo[13][1]}", 'false']
+        file_env = f"{self.listInfo[0][1]}{slash}{giturl}{slash}.env"
+        os.chdir(f"{self.listInfo[0][1]}{slash}{giturl}")
+        os.system(f"git fetch && git checkout {self.listInfo[5][1]}")
+        shutil.copyfile('.env.copy','.env')
+        for index,i in enumerate(bien_env,0):
+            with open(file_env, 'r+') as envFile:
+                lines = envFile.readlines()
+            new_lines=[]
+            for line in lines:
+                if i in line:
+                    a = line.split('=')[1]
+                    new_line = line.replace(a, bien_env2[index])
+                    new_lines.append(new_line + '\n')
+                else:
+                    new_lines.append(line)
+            with open(file_env, 'w') as jsonFile:
+                jsonFile.writelines(new_lines)
+class setup():
+    def __init__(self, listInfo):
+        self.listInfo = listInfo
+    def setupAPI(self):
+        os.chdir(f"{self.listInfo[0][1]}{slash}{giturl}")
+        os.system('npm install & npm install upath & pm2 start process.json & ')
+
+
 c = ChoiceSP()
 c.choices()
 for sp in arr[0]:
     rows, cols = np.where(arr == sp)
     if arr[1][cols[0]] != "":
         for i in range(int(arr[1][cols[0]])):
-            filename = sp + "." + str(i)
+            filename = f'{temp_f}{sp}.{str(i)}'
             cinfo = Info(sp, filename)
             if not os.path.exists(filename):
                 cinfo.writeInfo()
@@ -200,10 +268,28 @@ for sp in arr[0]:
     rows, cols = np.where(arr == sp)
     if arr[1][cols[0]] != "":
         for i in range(int(arr[1][cols[0]])):
-            filename = sp + "." + str(i)
+            filename = f'{temp_f}{sp}.{str(i)}'
             cinfo = Info(sp, filename)
             listInfo, numarr = cinfo.showInfo()
             cinfo.editInfo(listInfo, numarr)
-            cinfo.createFolder(listInfo)
-            creplace = replaceEnv()
-            creplace.gitCode(listInfo)
+            creplace = replaceEnv(listInfo, sp)
+            creplace.createFolder()
+for sp in arr[0]:
+    rows, cols = np.where(arr == sp)
+    if arr[1][cols[0]] != "":
+        for i in range(int(arr[1][cols[0]])):
+            filename = f'{temp_f}{sp}.{str(i)}'
+            cinfo = Info(sp, filename)
+            listInfo = cinfo.readInfo()
+            creplace = replaceEnv(listInfo, sp)
+            creplace.gitCode()
+            creplace.replaceApi()
+            if not 'API' in sp and sp != 'CDN':
+                giturl = arr[2][cols[0]].split('&')[1]
+                creplace.replaceUI(giturl)
+                if sp == 'HR-WEB':
+                    giturl = 'hrm-ui'
+                    creplace.replaceUI(giturl)
+
+
+            

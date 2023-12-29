@@ -1,16 +1,10 @@
-import os, time
-import numpy as np
-import tempfile, shutil
-a = 'D:\web'
-b = 'D:\web\public'
-c = 'demo'
-d = 'http://168.168.2.19'
-text = f"""#!/bin/bash
+#!/bin/bash
 #Cac thong tin can thay the
-dirsourcecode={a}
-dirweb={b}
-branch={c}
-HP_REPLACE={d}""" + '\n' + """runWithDelay () {
+dirsourcecode=D:\web
+dirweb=D:\web\public
+branch=demo
+HP_REPLACE=http://168.168.2.19
+runWithDelay () {
     sleep $1;
     shift;
     "${@}";
@@ -66,17 +60,17 @@ if [ -d "$dirsourcecode/$1" ]; then
 	if [ $1 = hrm-ui ]; then
 		if grep -q 'homepage' package.json
 		then
-			sed -i "s|http.*|${HP_REPLACE}/hrm\",|g" package.json
+			sed -i "s|http.*|${HP_REPLACE}/hrm",|g" package.json
 		else
-			sed -i "5 i \ \ \ \ \"homepage\": \"${HP_REPLACE}/hrm\"," package.json
+			sed -i "5 i \ \ \ \ "homepage": "${HP_REPLACE}/hrm"," package.json
 		fi
 		dirweb=$dirweb/hrm
 	else
 		if grep -q 'homepage' package.json
 		then
-			sed -i "s|http.*|${HP_REPLACE}\",|g" package.json
+			sed -i "s|http.*|${HP_REPLACE}",|g" package.json
 		else
-			sed -i "5 i \ \ \ \ \"homepage\": \"${HP_REPLACE}\"," package.json
+			sed -i "5 i \ \ \ \ "homepage": "${HP_REPLACE}"," package.json
 		fi
 	fi
 	#Run build code
@@ -127,8 +121,4 @@ last_3_chars="${input:${#input}-3}"
 		update_ui $1 $2
 	fi
 	echo "Finished successfully"
-exit"""
-with open('van_ban.txt', 'w') as f:
-    f.write(text)
-
-    
+exit

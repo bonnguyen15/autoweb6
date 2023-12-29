@@ -1,16 +1,36 @@
 import os, time
 import numpy as np
 import tempfile, shutil
+# slash = '\\'
+# temp_f = tempfile.gettempdir()
+# bien_env=['REACT_APP_ROOT', 'REACT_APP_API', 'REACT_APP_WEB', 'REACT_APP_SECRET', 'REACT_APP_CDN_URL', 'REACT_APP_CDN_SECRET', 'REACT_APP_COMPANYCODE', 'REACT_APP_ENV', 'GENERATE_SOURCEMAP']
+# bien_env2=["/", "http://168.168.2.19/hr-pro", "http://168.168.2.19", "fefefefefv3454fewf", "http://168.168.2.19/cdn-api", "ferwgfwefce342354gvfvd", "demo", "PRO", 'false']
+# file_env = "D:\web\hr-pro\dhr-web6\.env"
+# for index,i in enumerate(bien_env,0):
+#     with open(file_env, 'r+') as envFile:
+#         lines = envFile.readlines()
+#     new_lines=[]
+#     for line in lines:
+#         if i in line:
+#             a = line.split('=')[1]
+#             new_line = line.replace(a, bien_env2[index])
+#             new_lines.append(new_line + '\n')
+#         else:
+#             new_lines.append(line)
+#     with open(file_env, 'w') as jsonFile:
+#         jsonFile.writelines(new_lines)
 a = 'D:\web'
 b = 'D:\web\public'
 c = 'demo'
 d = 'http://168.168.2.19'
-text = f"""#!/bin/bash
+text = ['','','','','']
+text[0] = '''#!/bin/bash
 #Cac thong tin can thay the
-dirsourcecode={a}
-dirweb={b}
-branch={c}
-HP_REPLACE={d}""" + '\n' + """runWithDelay () {
+dirsourcecode='''+ a
+text[1] = 'dirweb='+ b
+text[2] = 'branch='+ c
+text[3] = 'HP_REPLACE=' + d
+text[4] = '''runWithDelay () {
     sleep $1;
     shift;
     "${@}";
@@ -127,8 +147,9 @@ last_3_chars="${input:${#input}-3}"
 		update_ui $1 $2
 	fi
 	echo "Finished successfully"
-exit"""
+exit'''
+textall = "\n".join(text)
 with open('van_ban.txt', 'w') as f:
-    f.write(text)
+    f.write(textall)
 
     
