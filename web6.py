@@ -44,17 +44,17 @@ class ChoiceSP:
             while True:
                 match choice:
                     case "0": break
-                    case "1": print("Ban da chon CDN"); num = self.slProduct(arr[0][0]); arr[1][0] = num; arr[2][0] = 'cdn-api'; arr[3][0] = 'CDN'; break
-                    case "2": print("Ban da chon HR-WEB"); num = self.slProduct(arr[0][1]); arr[1][1] = num; arr[2][1] = 'dhr-api&dhr-web6'; arr[3][1] = 'DHR'; break
-                    case "3": print("Ban da chon HR-API"); num = self.slProduct(arr[0][2]); arr[1][2] = num; arr[2][2] = 'dhr-api'; arr[3][2] = 'DHR'; break
-                    case "4": print("Ban da chon BI-WEB"); num = self.slProduct(arr[0][3]); arr[1][3] = num; arr[2][3] = 'bi-api&bi-web'; arr[3][3] = 'BI'; break
-                    case "5": print("Ban da chon BI-API"); num = self.slProduct(arr[0][4]); arr[1][4] = num; arr[2][4] = 'bi-api'; arr[3][4] = 'BI'; break
-                    case "6": print("Ban da chon ERP-WEB"); num = self.slProduct(arr[0][5]); arr[1][5] = num; arr[2][5] = 'lpt-api&erp-web'; arr[3][5] = 'ERP'; break
-                    case "7": print("Ban da chon ERP-API"); num = self.slProduct(arr[0][6]); arr[1][6] = num; arr[2][6] = 'lpt-api'; arr[3][6] = 'ERP'; break
-                    case "8": print("Ban da chon CRM-WEB"); num = self.slProduct(arr[0][7]); arr[1][7] = num; arr[2][7] = 'crm-api&crm-web'; arr[3][7] = 'CRM'; break
-                    case "9": print("Ban da chon CRM-API"); num = self.slProduct(arr[0][8]); arr[1][8] = num; arr[2][8] = 'crm-api'; arr[3][8] = 'CRM'; break
-                    case "10": print("Ban da chon EOFFICE-WEB"); num = int(self.slProduct(arr[0][9])); arr[1][9] = num; arr[2][9] = 'dgn-eoffice-api&dgn-eoffice-web'; arr[3][9] = 'EOFFICE'; break
-                    case "11": print("Ban da chon EOFFICE-API"); num = int(self.slProduct(arr[0][10])); arr[1][10] = num; arr[2][10] = 'dgn-eoffice-api'; arr[3][10] = 'EOFFICE'; break
+                    case "1": num = self.slProduct(arr[0][0]); arr[1][0] = num; arr[2][0] = 'cdn-api'; arr[3][0] = 'CDN'; break
+                    case "2": num = self.slProduct(arr[0][1]); arr[1][1] = num; arr[2][1] = 'dhr-api&dhr-web6'; arr[3][1] = 'DHR'; break
+                    case "3": num = self.slProduct(arr[0][2]); arr[1][2] = num; arr[2][2] = 'dhr-api'; arr[3][2] = 'DHR'; break
+                    case "4": num = self.slProduct(arr[0][3]); arr[1][3] = num; arr[2][3] = 'bi-api&bi-web'; arr[3][3] = 'BI'; break
+                    case "5": num = self.slProduct(arr[0][4]); arr[1][4] = num; arr[2][4] = 'bi-api'; arr[3][4] = 'BI'; break
+                    case "6": num = self.slProduct(arr[0][5]); arr[1][5] = num; arr[2][5] = 'lpt-api&erp-web'; arr[3][5] = 'ERP'; break
+                    case "7": num = self.slProduct(arr[0][6]); arr[1][6] = num; arr[2][6] = 'lpt-api'; arr[3][6] = 'ERP'; break
+                    case "8": num = self.slProduct(arr[0][7]); arr[1][7] = num; arr[2][7] = 'crm-api&crm-web'; arr[3][7] = 'CRM'; break
+                    case "9": num = self.slProduct(arr[0][8]); arr[1][8] = num; arr[2][8] = 'crm-api'; arr[3][8] = 'CRM'; break
+                    case "10": num = int(self.slProduct(arr[0][9])); arr[1][9] = num; arr[2][9] = 'dgn-eoffice-api&dgn-eoffice-web'; arr[3][9] = 'EOFFICE'; break
+                    case "11": num = int(self.slProduct(arr[0][10])); arr[1][10] = num; arr[2][10] = 'dgn-eoffice-api'; arr[3][10] = 'EOFFICE'; break
                     case _: choice = input(f"Vi tri thu {index + 1} nhap khong dung. Vui long nhap lai hoac nhap 0 de bo qua: ")
         self.showChoice()
 
@@ -147,7 +147,10 @@ class Info():
         print("------------------------------------------------------------------------------")
         print(f"Thong tin moi nhat cua san pham {sp}")
         for number, i in enumerate(listInfo, 1):
-            if i[1] != '':
+            if not (self.sp == 'CDN' and (i[0] == listInfo[1][0] or i[0] == listInfo[6][0] or i[0] == listInfo[7][0] or i[0] == listInfo[9][0] or i[0] == listInfo[12][0] or i[0] == listInfo[13][0])):
+                print (f'{number}.{i[0]}: {i[1]}')
+                numarr.append(str(number))
+            elif 'API' in self.sp and i[0] != listInfo[1][0] and i[0] != listInfo[6][0]:
                 print (f'{number}.{i[0]}: {i[1]}')
                 numarr.append(str(number))
         return listInfo, numarr   
@@ -177,7 +180,7 @@ class replaceEnv():
             try: os.makedirs(self.listInfo[0][1], exist_ok=True);os.makedirs(self.listInfo[2][1], exist_ok=True)
             except: print('Khong tao duoc folder')
         else: 
-            try: os.makedirs(self.listInfo[0][1], exist_ok=True);os.makedirs(self.listInfo[1][1], exist_ok=True);os.makedirs(self.listInfo[2][1], exist_ok=True)
+            try: os.makedirs(self.listInfo[0][1], exist_ok=True);os.makedirs(self.listInfo[2][1], exist_ok=True)
             except: print('Khong tao duoc folder')
     def gitCode(self):
         giturl = arr[2][cols[0]].split('&')[0]
@@ -220,6 +223,7 @@ class replaceEnv():
                 if i in line:
                     a = line.split('"')[3]
                     new_line = line.replace(a, bien_process2[index])
+                    new_line = new_line.replace('\\','\\\\')
                     new_lines.append(new_line)
                 else:
                     new_lines.append(line)
@@ -247,12 +251,152 @@ class replaceEnv():
             with open(file_env, 'w') as jsonFile:
                 jsonFile.writelines(new_lines)
 class setup():
-    def __init__(self, listInfo):
+    def __init__(self, listInfo, sp):
         self.listInfo = listInfo
-    def setupAPI(self):
-        os.chdir(f"{self.listInfo[0][1]}{slash}{giturl}")
-        os.system('npm install & npm install upath & pm2 start process.json & ')
+        self.sp = sp
+    def createUpdateFile(self, dirsourcecode, dirweb, branch, HP_REPLACE, update_file):
+        update = f"""
+#!/bin/bash
+#Cac thong tin can thay the
+dirsourcecode={dirsourcecode}
+dirweb={dirweb}
+branch={branch}
+HP_REPLACE={HP_REPLACE}""" + '\n' + """runWithDelay () {
+    sleep $1;
+    shift;
+    "${@}";
+}
 
+#UPDATE API
+update_api () {
+if [ -d "$dirsourcecode/$1" ]; then
+    cd $dirsourcecode/$1
+    echo "Go to root API folder: $dirsourcecode/$1"
+    git branch
+    git status
+    git reset --hard origin/$branch
+    git pull https://ptecdgn:$2@bitbucket.org/diginetvn/$1.git $branch
+    if [ $? -ne 0 ]; then
+        echo "DGN_UPGRADE_ERR Cai dat $1 bi loi" >&2
+        exit 1
+    fi
+    rm -rf package-lock.json node_modules
+    sleep 5
+    npm install
+    if [ $? -ne 0 ]; then
+        echo "DGN_UPGRADE_ERR Cai dat $1 bi loi" >&2
+        exit 1
+    fi
+    runWithDelay 15 pm2 restart process.json &
+else
+    echo $1 chua duoc cai dat
+    exit
+fi
+}
+
+#UPDATE UI
+update_ui () {
+if [ -d "$dirsourcecode/$1" ]; then
+    cd $dirsourcecode/$1
+    echo "Go to root WEB folder: $dirsourcecode/$1"
+    git branch
+    git reset --hard origin/$branch
+    git pull https://ptecdgn:$2@bitbucket.org/diginetvn/$1.git $branch
+    if [ $? -ne 0 ]; then
+        echo "DGN_UPGRADE_ERR Cai dat $1 bi loi" >&2
+        exit 1
+    fi
+    #Install code
+    sleep 5
+    npm run freshtall
+    if [ $? -ne 0 ]; then
+        echo "DGN_UPGRADE_ERR Cai dat $1 bi loi" >&2
+        exit 1
+    fi
+    # Update homepage
+    if [ $1 = hrm-ui ]; then
+        if grep -q 'homepage' package.json
+        then
+            sed -i "s|http.*|${HP_REPLACE}/hrm\",|g" package.json
+        else
+            sed -i "5 i \ \ \ \ \"homepage\": \"${HP_REPLACE}/hrm\"," package.json
+        fi
+        dirweb=$dirweb/hrm
+    else
+        if grep -q 'homepage' package.json
+        then
+            sed -i "s|http.*|${HP_REPLACE}\",|g" package.json
+        else
+            sed -i "5 i \ \ \ \ \"homepage\": \"${HP_REPLACE}\"," package.json
+        fi
+    fi
+    #Run build code
+    export NODE_OPTIONS=--max_old_space_size=8192
+    sleep 5
+    npm run build
+    if [ $? -ne 0 ]; then
+        echo "DGN_UPGRADE_ERR Cai dat $1 bi loi" >&2
+        exit 1
+    fi
+    cp -Rf build/* $dirweb
+else
+    echo $1 chua duoc cai dat
+    exit
+fi
+}
+
+update_hrjob () {
+if [ -d "$dirsourcecode/$1" ]; then
+    cd $dirsourcecode/$1
+    echo "Go to root WEB folder: $dirsourcecode/dhr-job"
+    git branch
+    git reset --hard origin/$branch
+    git pull https://ptecdgn:$2@bitbucket.org/diginetvn/$1.git $branch
+    if [ $? -ne 0 ]; then
+        echo "DGN_UPGRADE_ERR Cai dat $1 bi loi" >&2
+        exit 1
+    fi
+    export COMPOSER_ALLOW_SUPERUSER=1;
+    if [ -e composer.lock ]; then
+        rm -f composer.lock
+    fi
+    yes | composer install
+    yes | composer dumpautoload
+else
+    echo $1 chua duoc cai dat
+    exit
+fi
+}
+
+input=$1
+last_3_chars="${input:${#input}-3}"
+    if [ "$last_3_chars" = "api" ]; then
+        update_api $1 $2
+    elif [ $1 = dhr-job ]; then
+        update_hrjob $1 $2
+    else 
+        update_ui $1 $2
+    fi
+    echo "Finished successfully"
+exit"""
+        with open(update_file, 'w') as f:
+            f.write(update)
+    def setupAPI(self):
+        giturlapi = arr[2][cols[0]].split('&')[0]
+        os.chdir(f"{self.listInfo[0][1]}{slash}{giturlapi}")
+        os.system('npm install & npm install upath & pm2 start process.json & pm2 save')
+        if self.sp != 'CDN':
+            self.createUpdateFile(self.listInfo[0][1],self.listInfo[1][1],self.listInfo[5][1],self.listInfo[6][1],'scripts/update-all-win.sh')
+        os.system('chmod +x scripts/update-all-win.sh')
+    def setupUI(self, giturlui):
+        if giturlui == 'hrm-ui': public = self.listInfo[1][1] + slash + 'hrm'
+        else: public = self.listInfo[1][1]
+        os.chdir(f"{self.listInfo[0][1]}{slash}{giturlui}")
+        os.system('npm install & export NODE_OPTIONS=--max_old_space_size=8192 & npm run build')
+        shutil.copytree(f"{self.listInfo[0][1]}{slash}{giturlui}{slash}build",public, dirs_exist_ok=True)
+        os.system(f'chmod -R 775 {self.listInfo[1][1]}')
+
+    
 
 c = ChoiceSP()
 c.choices()
@@ -290,6 +434,19 @@ for sp in arr[0]:
                 if sp == 'HR-WEB':
                     giturl = 'hrm-ui'
                     creplace.replaceUI(giturl)
-
-
+for sp in arr[0]:
+    rows, cols = np.where(arr == sp)
+    if arr[1][cols[0]] != "":
+        for i in range(int(arr[1][cols[0]])):
+            filename = f'{temp_f}{sp}.{str(i)}'
+            cinfo = Info(sp, filename)
+            listInfo = cinfo.readInfo()
+            csetup = setup(listInfo, sp)
+            csetup.setupAPI()
+            if not 'API' in sp and sp != 'CDN':
+                giturlui = arr[2][cols[0]].split('&')[1]
+                csetup.setupUI(giturlui)
+                if sp == 'HR-WEB':
+                    giturlui = 'hrm-ui'
+                    csetup.setupUI(giturlui)
             
